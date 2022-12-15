@@ -334,25 +334,43 @@ class LaneSection:
     if direction == "start":
       if self.left and self.right:
         leftmost_lane, rightmost_lane = self.left[0], self.right[-1]
-        return [leftmost_lane.right_boundary[-1], rightmost_lane.right_boundary[0]]
+        if leftmost_lane.right_boundary and rightmost_lane.right_boundary:
+          return [leftmost_lane.right_boundary[-1], rightmost_lane.right_boundary[0]]
+        else:
+          return []
       elif self.left:
         leftmost_lane, rightmost_lane = self.left[0], self.left[-1]
-        return [leftmost_lane.right_boundary[-1], rightmost_lane.left_boundary[-1]]
+        if leftmost_lane.right_boundary and rightmost_lane.left_boundary:
+         return [leftmost_lane.right_boundary[-1], rightmost_lane.left_boundary[-1]]
+        else:
+          return []
       elif self.right:
         leftmost_lane, rightmost_lane = self.right[0], self.right[-1]
-        return [leftmost_lane.left_boundary[0], rightmost_lane.right_boundary[0]]
+        if leftmost_lane.left_boundary and rightmost_lane.right_boundary:
+          return [leftmost_lane.left_boundary[0], rightmost_lane.right_boundary[0]]
+        else:
+          return []
       else:
         return []
     elif direction == "end":
       if self.left and self.right:
         leftmost_lane, rightmost_lane = self.left[0], self.right[-1]
-        return [leftmost_lane.right_boundary[0], rightmost_lane.right_boundary[-1]]
+        if leftmost_lane.right_boundary and rightmost_lane.right_boundary:
+          return [leftmost_lane.right_boundary[0], rightmost_lane.right_boundary[-1]]
+        else:
+          return []
       elif self.left:
         leftmost_lane, rightmost_lane = self.left[0], self.left[-1]
-        return [leftmost_lane.right_boundary[0], rightmost_lane.left_boundary[0]]
+        if leftmost_lane.right_boundary and rightmost_lane.left_boundary:
+          return [leftmost_lane.right_boundary[0], rightmost_lane.left_boundary[0]]
+        else:
+          return []
       elif self.right:
         leftmost_lane, rightmost_lane = self.right[0], self.right[-1]
-        return [leftmost_lane.left_boundary[-1], rightmost_lane.right_boundary[-1]]
+        if leftmost_lane.left_boundary and rightmost_lane.right_boundary:
+          return [leftmost_lane.left_boundary[-1], rightmost_lane.right_boundary[-1]]
+        else:
+          return []
       else:
         return []
     else:

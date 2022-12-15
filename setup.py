@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="imap_box",
-    version="0.1.5",
+    version="0.1.5_0",
     author="daohu527",
     author_email="daohu527@gmail.com",
     description="High-resolution map visualization and conversion tool",
@@ -26,6 +26,9 @@ setuptools.setup(
         'protobuf<=3.19.4',
         'matplotlib',
         'record_msg',
+        'pyqt5',
+        'tk'
+
     ],
     entry_points={
         'console_scripts': [
