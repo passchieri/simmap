@@ -205,79 +205,83 @@ class Opendrive2Apollo(Convertor):
 
   def add_lane_boundary(self, pb_lane, lane):
     # 1. left boundary
-    segment = pb_lane.left_boundary.curve.segment.add()
-    for point3d in lane.left_boundary:
-      point = segment.line_segment.point.add()
-      # lhd 2022/12/03 for 3D view
-      if global_var.get_element_value("enable_z_axis"):
-        point.x, point.y, point.z = point3d.x, point3d.y, point3d.z
-      else:
-        point.x, point.y = point3d.x, point3d.y
-    segment.s = 0
-    segment.start_position.x = lane.left_boundary[0].x
-    segment.start_position.y = lane.left_boundary[0].y
-    segment.start_position.z = lane.left_boundary[0].z
-    segment.length = pb_lane.length
-    pb_lane.left_boundary.length = pb_lane.length
-    pb_boundary_type = to_pb_boundary_type(lane.left_boundary_type)
-    boundary_type = pb_lane.left_boundary.boundary_type.add()
-    boundary_type.s = 0
-    boundary_type.types.append(pb_boundary_type)
+    if lane.left_boundary:
+      segment = pb_lane.left_boundary.curve.segment.add()
+      for point3d in lane.left_boundary:
+        point = segment.line_segment.point.add()
+        # lhd 2022/12/03 for 3D view
+        if global_var.get_element_value("enable_z_axis"):
+          point.x, point.y, point.z = point3d.x, point3d.y, point3d.z
+        else:
+          point.x, point.y = point3d.x, point3d.y
+      segment.s = 0
+      segment.start_position.x = lane.left_boundary[0].x
+      segment.start_position.y = lane.left_boundary[0].y
+      segment.start_position.z = lane.left_boundary[0].z
+      segment.length = pb_lane.length
+      pb_lane.left_boundary.length = pb_lane.length
+      pb_boundary_type = to_pb_boundary_type(lane.left_boundary_type)
+      boundary_type = pb_lane.left_boundary.boundary_type.add()
+      boundary_type.s = 0
+      boundary_type.types.append(pb_boundary_type)
 
     # 2. center line
-    segment = pb_lane.central_curve.segment.add()
-    for point3d in lane.center_line:
-      point = segment.line_segment.point.add()
-      # lhd 2022/12/03 for 3D view
-      if global_var.get_element_value("enable_z_axis"):
-        point.x, point.y, point.z = point3d.x, point3d.y, point3d.z
-      else:
-        point.x, point.y = point3d.x, point3d.y
-    segment.s = 0
-    segment.start_position.x = lane.center_line[0].x
-    segment.start_position.y = lane.center_line[0].y
-    segment.start_position.z = lane.center_line[0].z
-    segment.length = pb_lane.length
+    if lane.center_line:
+      segment = pb_lane.central_curve.segment.add()
+      for point3d in lane.center_line:
+        point = segment.line_segment.point.add()
+        # lhd 2022/12/03 for 3D view
+        if global_var.get_element_value("enable_z_axis"):
+          point.x, point.y, point.z = point3d.x, point3d.y, point3d.z
+        else:
+          point.x, point.y = point3d.x, point3d.y
+      segment.s = 0
+      segment.start_position.x = lane.center_line[0].x
+      segment.start_position.y = lane.center_line[0].y
+      segment.start_position.z = lane.center_line[0].z
+      segment.length = pb_lane.length
 
     # 3. right boundary
-    segment = pb_lane.right_boundary.curve.segment.add()
-    for point3d in lane.right_boundary:
-      point = segment.line_segment.point.add()
-      # lhd 2022/12/03 for 3D view
-      if global_var.get_element_value("enable_z_axis"):
-        point.x, point.y, point.z = point3d.x, point3d.y, point3d.z
-      else:
-        point.x, point.y = point3d.x, point3d.y
-    segment.s = 0
-    segment.start_position.x = lane.right_boundary[0].x
-    segment.start_position.y = lane.right_boundary[0].y
-    segment.start_position.z = lane.right_boundary[0].z
-    segment.length = pb_lane.length
-    pb_lane.right_boundary.length = pb_lane.length
-    pb_boundary_type = to_pb_boundary_type(lane.right_boundary_type)
-    boundary_type = pb_lane.right_boundary.boundary_type.add()
-    boundary_type.s = 0
-    boundary_type.types.append(pb_boundary_type)
+    if lane.right_boundary:
+      segment = pb_lane.right_boundary.curve.segment.add()
+      for point3d in lane.right_boundary:
+        point = segment.line_segment.point.add()
+        # lhd 2022/12/03 for 3D view
+        if global_var.get_element_value("enable_z_axis"):
+          point.x, point.y, point.z = point3d.x, point3d.y, point3d.z
+        else:
+          point.x, point.y = point3d.x, point3d.y
+      segment.s = 0
+      segment.start_position.x = lane.right_boundary[0].x
+      segment.start_position.y = lane.right_boundary[0].y
+      segment.start_position.z = lane.right_boundary[0].z
+      segment.length = pb_lane.length
+      pb_lane.right_boundary.length = pb_lane.length
+      pb_boundary_type = to_pb_boundary_type(lane.right_boundary_type)
+      boundary_type = pb_lane.right_boundary.boundary_type.add()
+      boundary_type.s = 0
+      boundary_type.types.append(pb_boundary_type)
 
   def add_lane_sample(self, pb_lane, lane):
-    cur_lane_id = int(lane.lane_id)
-    total_s = lane.center_line[0].s
-    for point3d in lane.center_line:
-      lane_width = lane.get_width_by_s(point3d.s)
+    if lane.center_line:
+      cur_lane_id = int(lane.lane_id)
+      total_s = lane.center_line[0].s
+      for point3d in lane.center_line:
+        lane_width = lane.get_width_by_s(point3d.s)
 
-      # 1. left sample
-      left_sample = pb_lane.left_sample.add()
-      left_sample.width = lane_width / 2
-      # 2. right sample
-      right_sample = pb_lane.right_sample.add()
-      right_sample.width = lane_width / 2
-      # left lane's should be reverse
-      if cur_lane_id > 0:
-        left_sample.s = total_s - point3d.s
-        right_sample.s = total_s - point3d.s
-      else:
-        left_sample.s = point3d.s
-        right_sample.s = point3d.s
+        # 1. left sample
+        left_sample = pb_lane.left_sample.add()
+        left_sample.width = lane_width / 2
+        # 2. right sample
+        right_sample = pb_lane.right_sample.add()
+        right_sample.width = lane_width / 2
+        # left lane's should be reverse
+        if cur_lane_id > 0:
+          left_sample.s = total_s - point3d.s
+          right_sample.s = total_s - point3d.s
+        else:
+          left_sample.s = point3d.s
+          right_sample.s = point3d.s
 
 
   def add_lane_neighbors(self, pb_lane, xodr_road, idx, lane):
@@ -580,9 +584,13 @@ class Opendrive2Apollo(Convertor):
 
     points = []
     for road, relation in xodr_junction.connected_roads:
-      start, end = road.get_cross_section(relation)
-      points.append([start.x, start.y])
-      points.append([end.x, end.y])
+      try:
+        start, end = road.get_cross_section(relation)
+        points.append([start.x, start.y])
+        points.append([end.x, end.y])
+      except ValueError:
+        #sometimes, there is no crosssetction, so also no point to add
+        pass
 
     # when point <= 4 convex_hull will not fully covered, so we change to aabb_box
     if len(points) <= 4:
